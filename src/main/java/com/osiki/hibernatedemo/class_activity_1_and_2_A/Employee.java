@@ -1,8 +1,6 @@
-package com.osiki.hibernatedemo;
+package com.osiki.hibernatedemo.class_activity_1_and_2_A;
 
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 @Table(name = "employee")

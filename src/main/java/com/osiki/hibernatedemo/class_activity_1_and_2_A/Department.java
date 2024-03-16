@@ -1,5 +1,6 @@
-package com.osiki.hibernatedemo;
+package com.osiki.hibernatedemo.class_activity_1_and_2_A;
 
+import com.osiki.hibernatedemo.class_activity_1_and_2_A.Employee;
 import jakarta.persistence.*;
 
 import java.util.List;
