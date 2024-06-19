@@ -4,9 +4,7 @@ import com.osiki.hibernatedemo.entites.enums.Designation;
 import com.osiki.hibernatedemo.entites.enums.Gender;
 import com.osiki.hibernatedemo.entites.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +12,8 @@ import java.util.List;
 @Table(name = "employee_tbl")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class Employee extends BaseClass {
 

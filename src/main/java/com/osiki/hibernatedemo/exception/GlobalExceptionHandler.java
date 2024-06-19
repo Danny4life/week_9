@@ -1,5 +1,6 @@
 package com.osiki.hibernatedemo.exception;
 
+import com.osiki.hibernatedemo.payload.response.ApiResponse;
 import com.osiki.hibernatedemo.payload.response.ErrorDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +32,18 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
 
+    }
+
+    @ExceptionHandler(EmailNotSendException.class)
+    public ResponseEntity<ApiResponse<ErrorDetails>> handleEmailNotSendException(final EmailNotSendException ex){
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .errorMessage(ex.getMessage())
+                .errorDetails(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR))
+                .timeStamp(LocalDateTime.now())
+                .build();
+
+        ApiResponse<ErrorDetails> response = new ApiResponse<>(ex.getMessage(), errorDetails);
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

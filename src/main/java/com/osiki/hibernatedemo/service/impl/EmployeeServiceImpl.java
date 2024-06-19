@@ -3,10 +3,12 @@ package com.osiki.hibernatedemo.service.impl;
 import com.osiki.hibernatedemo.entites.enums.Role;
 import com.osiki.hibernatedemo.entites.model.Employee;
 import com.osiki.hibernatedemo.exception.EmailAlreadyExistsException;
+import com.osiki.hibernatedemo.payload.request.EmailDetails;
 import com.osiki.hibernatedemo.payload.request.EmployeeRequest;
 import com.osiki.hibernatedemo.payload.response.ApiResponse;
 import com.osiki.hibernatedemo.payload.response.EmployeeResponse;
 import com.osiki.hibernatedemo.repository.EmployeeRepository;
+import com.osiki.hibernatedemo.service.EmailService;
 import com.osiki.hibernatedemo.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final EmailService emailService;
     @Override
     public ResponseEntity<ApiResponse<EmployeeResponse>> registerEmployee(EmployeeRequest employeeRequest) {
         boolean isEmailPresent = employeeRepository.existsByEmail(employeeRequest.getEmail());
@@ -36,7 +39,18 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .role(Role.USER)
                 .build();
 
-        employeeRepository.save(newEmployee);
+        Employee saveEmployee = employeeRepository.save(newEmployee);
+
+        // send email alert
+        EmailDetails emailDetails = EmailDetails.builder()
+                .recipient(saveEmployee.getEmail())
+                .subject("ACCOUNT CREATION")
+                .messageBody("CONGRATULATIONS!!! Your Employee Account Has Been Successfully Created.\n Your Account Details: \n" +
+                        "Account FullName: " + saveEmployee.getFirstName() + " " + saveEmployee.getLastName())
+                .build();
+
+        emailService.sendEmailAlert(emailDetails);
+
 
         EmployeeResponse response = EmployeeResponse.builder()
                 .firstName(employeeRequest.getFirstName())
